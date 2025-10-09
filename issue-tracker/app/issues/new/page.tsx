@@ -1,21 +1,27 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import { TextField,  Button, Callout } from "@radix-ui/themes";
+import { TextField,  Button, Callout, Text } from "@radix-ui/themes";
 import SimpleMDE from "react-simplemde-editor";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import React from "react";
-interface IssueForm {
-    title: string;
-    description: string;
-}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "../../validationSchemas";
+import { set, z } from "zod";
+import ErrorMessage from "../../components/ErrorMessage";
+import Spinner from "../../components/Spinner";
+
+type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
     const router = useRouter()
-    const { register, control, handleSubmit } = useForm<IssueForm>()
+    const { register, control, handleSubmit, formState:{errors} } = useForm<IssueForm>({
+        resolver: zodResolver(createIssueSchema)
+    })
     const [error, setError] = React.useState('')
+    const [isSubmitting, setSubmitting] = React.useState(false);
 
     return (
         <div  className='max-w-xl'>
@@ -27,21 +33,26 @@ const NewIssuePage = () => {
         </Callout.Root>}
         <form 
         className='space-y-3' onSubmit={handleSubmit(async (data) => {
-            try {  await axios.post('/api/issues', data);
+            try {  
+                setSubmitting(true);
+                await axios.post('/api/issues', data);
                 router.push('/issues');} 
                 catch (error) {
+                setSubmitting(false);
                 setError('Failed to create issue');
             }
         })}>
             <TextField.Root placeholder="Title" {...register("title")}/>
+            <ErrorMessage>{errors.title?.message}</ErrorMessage>
             <Controller
                 name="description"
                 control={control}
                 render={({ field }) => <SimpleMDE placeholder="Desciption" {...field}/>}/>
-            <Button type='submit'>Submit New Issue</Button>
+            <ErrorMessage>{errors.description?.message}</ErrorMessage>
+            <Button disabled={isSubmitting} type='submit'>Submit New Issue{isSubmitting && <Spinner/>}</Button>
         
         </form>
-          </div>
+        </div>
     );
 };
 
