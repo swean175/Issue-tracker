@@ -23,6 +23,16 @@ const NewIssuePage = () => {
     const [error, setError] = React.useState('')
     const [isSubmitting, setSubmitting] = React.useState(false);
 
+    const onSubmit = handleSubmit(async (data) => {
+            try {  
+                setSubmitting(true);
+                await axios.post('/api/issues', data);
+                router.push('/issues');} 
+                catch (error) {
+                setSubmitting(false);
+                setError('Failed to create issue');
+            }
+        })
     return (
         <div  className='max-w-xl'>
 
@@ -32,16 +42,7 @@ const NewIssuePage = () => {
             </Callout.Text>
         </Callout.Root>}
         <form 
-        className='space-y-3' onSubmit={handleSubmit(async (data) => {
-            try {  
-                setSubmitting(true);
-                await axios.post('/api/issues', data);
-                router.push('/issues');} 
-                catch (error) {
-                setSubmitting(false);
-                setError('Failed to create issue');
-            }
-        })}>
+        className='space-y-3' onSubmit={onSubmit}>
             <TextField.Root placeholder="Title" {...register("title")}/>
             <ErrorMessage>{errors.title?.message}</ErrorMessage>
             <Controller
