@@ -1,16 +1,13 @@
-import { Skeleton } from '@/app/components';
-import { Box } from '@radix-ui/themes';
+import { Box } from "@radix-ui/themes";
+import { Skeleton } from "@/app/components";
 
 const LoadingNewIssuePage = async () => {
-
-
-  return (
-  
-    <Box className="max-w-xl">
-      <Skeleton />
-      <Skeleton height="20rem"/>
-    </Box>
-  );
+	return (
+		<Box className="max-w-xl">
+			<Skeleton />
+			<Skeleton height="20rem" />
+		</Box>
+	);
 };
 
 export default LoadingNewIssuePage;
