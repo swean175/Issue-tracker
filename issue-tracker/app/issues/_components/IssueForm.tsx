@@ -1,23 +1,21 @@
 "use client";
 
+// import SimpleMDE from "react-simplemde-editor";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { Issue } from "@prisma/client";
 import { Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-// import SimpleMDE from "react-simplemde-editor";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Issue } from "@prisma/client";
 import "easymde/dist/easymde.min.css";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import SimpleMDE from 'react-simplemde-editor';
-import { type z } from "zod";
+import SimpleMDE from "react-simplemde-editor";
+import type { z } from "zod";
 import ErrorMessage from "../../components/ErrorMessage";
 import Spinner from "../../components/Spinner";
-import {  issueSchema } from "../../validationSchemas";
-
+import { issueSchema } from "../../validationSchemas";
 
 type IssueFormData = z.infer<typeof issueSchema>;
-
 
 const IssueForm = ({ issue }: { issue?: Issue }) => {
 	const router = useRouter();
@@ -43,7 +41,6 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
 				router.push("/issues");
 				router.refresh();
 			}
-
 		} catch (error) {
 			setSubmitting(false);
 			setError("Failed to create issue");
@@ -57,7 +54,11 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
 				</Callout.Root>
 			)}
 			<form className="space-y-3" onSubmit={onSubmit}>
-				<TextField.Root placeholder="Title" defaultValue={issue?.title} {...register("title")} />
+				<TextField.Root
+					placeholder="Title"
+					defaultValue={issue?.title}
+					{...register("title")}
+				/>
 				<ErrorMessage>{errors.title?.message}</ErrorMessage>
 				<Controller
 					name="description"
