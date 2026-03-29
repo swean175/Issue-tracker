@@ -1,18 +1,18 @@
-import { issueSchema } from "@/app/validationSchemas";
+import { createIssueSchema } from "@/app/validationSchemas";
 import { prisma } from "@/prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: { id: string | number } },
 ) {
 	const body = await request.json();
-	const validation = issueSchema.safeParse(body);
+	const validation = createIssueSchema.safeParse(body);
 	if (!validation.success) {
 		return NextResponse.json(validation.error.format(), { status: 400 });
 	}
 	const issue = await prisma.issue.findUnique({
-		where: { id: parseInt(params.id) },
+		where: { id: typeof params.id === "string" ? parseInt(params.id) : params.id },
 	});
 
 	if (!issue)
@@ -30,10 +30,10 @@ export async function PATCH(
 	});
 }
 
-export async function DELETE( request: NextRequest,{ params }: { params: { id: string } }) {
+export async function DELETE( request: NextRequest,{ params }: { params: { id: string | number } }) {
 
 	const issue = await prisma.issue.delete({
-		where: { id: parseInt(params.id) },
+		where: { id: typeof params.id === "string" ? parseInt(params.id) : params.id },
 	});
 
 	if (!issue) {

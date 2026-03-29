@@ -13,11 +13,11 @@ import SimpleMDE from "react-simplemde-editor";
 import type { z } from "zod";
 import ErrorMessage from "../../components/ErrorMessage";
 import Spinner from "../../components/Spinner";
-import { issueSchema } from "../../validationSchemas";
+import { createIssueSchema } from "../../validationSchemas";
 
-type IssueFormData = z.infer<typeof issueSchema>;
+type IssueFormData = z.infer<typeof createIssueSchema>;
 
-const IssueForm = ({ issue }: { issue?: Issue }) => {
+const IssueForm = ({ issue, id }: { issue?: Issue; id?: number }) => {
 	const router = useRouter();
 	const {
 		register,
@@ -25,7 +25,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm<IssueFormData>({
-		resolver: zodResolver(issueSchema),
+		resolver: zodResolver(createIssueSchema),
 	});
 	const [error, setError] = React.useState("");
 	const [isSubmitting, setSubmitting] = React.useState(false);
@@ -38,7 +38,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
 				return;
 			} else {
 				await axios.post("/api/issues", data);
-				router.push("/issues");
+				router.push("/issues/list");
 				router.refresh();
 			}
 		} catch (error) {
