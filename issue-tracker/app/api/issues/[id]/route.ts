@@ -28,6 +28,7 @@ export async function PATCH(
 	return NextResponse.json(`Update issue with id: ${params.id}`, {
 		status: 200,
 	});
+	
 }
 
 export async function DELETE( request: NextRequest,{ params }: { params: { id: string | number } }) {

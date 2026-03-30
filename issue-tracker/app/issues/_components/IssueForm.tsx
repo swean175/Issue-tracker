@@ -35,12 +35,11 @@ const IssueForm = ({ issue, id }: { issue?: Issue; id?: number }) => {
 			setSubmitting(true);
 			if (issue) {
 				await axios.patch(`/api/issues/${issue.id}`, data);
-				return;
 			} else {
 				await axios.post("/api/issues", data);
-				router.push("/issues/list");
-				router.refresh();
 			}
+		 	router.push("/issues/list")
+			router.refresh();
 		} catch (error) {
 			setSubmitting(false);
 			setError("Failed to create issue");
