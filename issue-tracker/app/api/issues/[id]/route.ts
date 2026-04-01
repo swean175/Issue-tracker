@@ -1,18 +1,26 @@
 import { createIssueSchema } from "@/app/validationSchemas";
 import { prisma } from "@/prisma/client";
 import { type NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/route"; // Zaimportuj swoje opcje autoryzacj
+import { getServerSession } from "next-auth";
 
 export async function PATCH(
 	request: NextRequest,
-	{ params }: { params: { id: string | number } },
+	{ params }: { params: { id: string  } },
 ) {
+	  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  	const { id } = await params;
 	const body = await request.json();
 	const validation = createIssueSchema.safeParse(body);
 	if (!validation.success) {
 		return NextResponse.json(validation.error.format(), { status: 400 });
 	}
 	const issue = await prisma.issue.findUnique({
-		where: { id: typeof params.id === "string" ? parseInt(params.id) : params.id },
+		where: { id: parseInt(id) },
 	});
 
 	if (!issue)
@@ -31,11 +39,21 @@ export async function PATCH(
 	
 }
 
-export async function DELETE( request: NextRequest,{ params }: { params: { id: string | number } }) {
+export async function DELETE(
+	request: NextRequest,
+	{ params }: { params: Promise<{ id: string }> }
+) {
 
-	const issue = await prisma.issue.delete({
-		where: { id: typeof params.id === "string" ? parseInt(params.id) : params.id },
-	});
+	const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+	  const issue = await prisma.issue.findUnique({
+    where: { id: parseInt(id) },
+  });
 
 	if (!issue) {
 		return NextResponse.json({ error: "Invalid issue" }, { status: 404 });
@@ -46,7 +64,7 @@ export async function DELETE( request: NextRequest,{ params }: { params: { id: s
 		return NextResponse.json({});
 	}
 }
-function delay(arg0: number) {
-	throw new Error("Function not implemented.");
-}
+// function delay(arg0: number) {
+// 	throw new Error("Function not implemented.");
+// }
 
