@@ -4,9 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { AiFillBug } from "react-icons/ai";
+import { useSession } from "next-auth/react";
+import { Box } from "@radix-ui/themes";
 
 const NavBar = () => {
 	const currentPath = usePathname();
+	const { status, data: session } = useSession();
 
 	const links = [
 		{
@@ -40,6 +43,10 @@ const NavBar = () => {
 					</li>
 				))}
 			</ul>
+			<Box>
+				{status === "authenticated" && <Link href="/api/auth/signout">Log Out</Link>}
+				{status === "unauthenticated" && <Link href="/api/auth/signin">Log In</Link>}
+			</Box>
 		</nav>
 	);
 };
