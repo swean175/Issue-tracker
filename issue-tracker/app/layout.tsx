@@ -8,6 +8,8 @@ import NavBar from "./NavBar";
 import AuthProvider from "./auth/Provider";
 
 
+
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
