@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { AiFillBug } from "react-icons/ai";
 import { useSession } from "next-auth/react";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import { Box, Container, DropdownMenu, Flex, Avatar, Text } from "@radix-ui/themes";
 
 const NavBar = () => {
 	const currentPath = usePathname();
@@ -48,7 +48,19 @@ const NavBar = () => {
 			</ul>
 				</Flex>
 					<Box>
-				{status === "authenticated" && <Link href="/api/auth/signout">Log Out</Link>}
+				{status === "authenticated" &&
+				//  <Link href="/api/auth/signout">Log Out</Link>
+				<DropdownMenu.Root>
+					<DropdownMenu.Trigger >
+						<Avatar className="cursor-pointer" src={session.user?.image || undefined} fallback="?" size="2" radius="full" alt={session.user?.name || undefined} />
+					</DropdownMenu.Trigger>
+					<DropdownMenu.Content>
+						<DropdownMenu.Label><Text size="2">{session.user?.email}</Text></DropdownMenu.Label>
+						<DropdownMenu.Item>
+							<Link href="/api/auth/signout">Log Out</Link>
+						</DropdownMenu.Item>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>}
 				{status === "unauthenticated" && <Link href="/api/auth/signin">Log In</Link>}
 			</Box>
 			</Flex>
