@@ -6,11 +6,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import NavBar from "./NavBar";
 import AuthProvider from "./auth/Provider";
+//import i18n from "i18next";
+//import { initReactI18next } from "react-i18next";
+//import LanguageDetector from "i18next-browser-languagedetector";
 
 
 
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const browserLanguage = navigator.language 
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -23,7 +27,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en">
+		<html lang={browserLanguage}>
 			<body className={inter.variable}>
 				<AuthProvider>	<Theme accentColor="gold">
 					{/* <ThemePanel/> */}

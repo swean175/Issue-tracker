@@ -26,3 +26,24 @@ body {
 		)
 		rgb(var(--background-start-rgb));
 }
+
+@layer utilities {
+	.nav-link {
+		color: rgb(113 116 122);
+		transition: color 0.2s ease-in-out;
+	}
+
+	.nav-link:hover {
+		color: rgb(24 24 27);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.nav-link {
+			color: rgb(161 161 170);
+		}
+
+		.nav-link:hover {
+			color: rgb(244 244 245);
+		}
+	}
+}
