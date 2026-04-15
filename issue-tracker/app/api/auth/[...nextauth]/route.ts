@@ -29,7 +29,7 @@ import { prisma } from "@/prisma/client"
 
 
 export const authOptions: NextAuthOptions = {
-  // Tutaj definiujesz dostawców usług (Providers) [1]
+
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  // Konfiguracja sesji i JWT (NextAuth domyślnie używa szyfrowanych tokenów JWE) [3, 4]
+  
   session: {
     strategy: "jwt",
   },
@@ -45,7 +45,7 @@ export const authOptions: NextAuthOptions = {
   // adapter: PrismaAdapter(prisma), 
 };
 
-// W Next.js App Router musimy wyeksportować handler dla metod GET i POST
+
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
